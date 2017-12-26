@@ -44,7 +44,7 @@ if __name__ == "__main__":
     output = Filteredcounts.collect()
     
     f=open(sys.argv[2],'w')
-    for (word, count) in Filteredcounts:
+    for (word, count) in output:
         print("%s: %i" % (word, count))
         f.write(word+" : "+str(count)+"\n")
     f.close()
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     
     #SQL 部分
     #RDD创建DataFrame
-    df = spark.createDataFrame(output, ['word', 'count'])
+    df = spark.createDataFrame(counts.collect(), ['word', 'count'])
     df.createOrReplaceTempView("wordlist")    
     #SQL Spark SQL查询统计结果中次数超过k次的词语
     df2 = spark.sql("SELECT * from wordlist WHERE count > "+str(k))
